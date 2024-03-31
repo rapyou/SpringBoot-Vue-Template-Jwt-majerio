@@ -7,7 +7,7 @@ const router = createRouter({
         {
             path: '/',
             name: 'welcome',
-            component: () => import('@/views/WelcomeView.vue'),
+            // component: () => import('@/views/WelcomeView.vue'),
             children: [
                 {
                     path: '',
@@ -21,12 +21,24 @@ const router = createRouter({
                     path: 'forget',
                     name: 'welcome-forget',
                     component: () => import('@/views/welcome/ForgetPage.vue')
+                }, {
+                    path: 'create',
+                    name: 'create',
+                    component: () => import('@/views/create/index.vue')
+                }, {
+                    path: 'manage',
+                    name: 'manage',
+                    component: () => import('@/views/manage/index.vue')
                 }
             ]
         }, {
             path: '/index',
             name: 'index',
             component: () => import('@/views/IndexView.vue'),
+        }, {
+            path: '/map',
+            name: 'map',
+            component: () => import('@/views/main/index.vue'),
         }
     ]
 })
