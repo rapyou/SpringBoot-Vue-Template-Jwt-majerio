@@ -21,7 +21,7 @@ useDark({
         :default-active='create'>
         <el-menu-item index="/create"><el-icon><Odometer /></el-icon>创建任务</el-menu-item>
         <el-menu-item index="/manage"><el-icon><Odometer /></el-icon>任务管理</el-menu-item>
-        <el-menu-item index="/map"><el-icon><Odometer /></el-icon>地图</el-menu-item>
+        <!-- <el-menu-item index="/map"><el-icon><Odometer /></el-icon>地图</el-menu-item> -->
       </el-menu>
     </el-header>
     <el-main class="main-main">

@@ -1,17 +1,17 @@
 <template>
     <div id="map"></div>
-  </template>
-  
-  <script setup>
-  import { onMounted, reactive, ref } from "vue";
-  import L from "leaflet";
-  import 'leaflet-switch-basemap'
-//   import config from "../config";
-  import 'leaflet-switch-basemap/src/L.switchBasemap.css'
-  let map = null;
-  let marker = null;
-  let windSpeed = null;
-  let clipMask = [
+</template>
+
+<script setup>
+import { onMounted, reactive, ref } from "vue";
+import L from "leaflet";
+import 'leaflet-switch-basemap/src/L.switchBasemap'
+// import config from "../config";
+import 'leaflet-switch-basemap/src/L.switchBasemap.css'
+let map = null;
+let marker = null;
+let windSpeed = null;
+let clipMask = [
     [153.477409376, -28.1570717509999],
     [153.485948960001, -28.1570278689999],
     [153.531166368, -28.175248371],
@@ -2125,124 +2125,131 @@
     [153.457134208, -28.1805400739999],
     [153.468503776, -28.162512046],
     [153.477409376, -28.1570717509999],
-  ];
-  onMounted(() => {
+];
+onMounted(() => {
     // 待加载的 JS 文件数组
     const files = [
-      "./lib/geotiff/geotiff.js",
-      "./lib/geotiff/plotty.js",
-      "./lib/geotiff/leaflet-geotiff.js",
-      "./lib/geotiff/leaflet-geotiff-plotty.js",
-      "./lib/geotiff/leaflet-geotiff-vector-arrows.js",
+        "./lib/geotiff/geotiff.js",
+        "./lib/geotiff/plotty.js",
+        "./lib/geotiff/leaflet-geotiff.js",
+        "./lib/geotiff/leaflet-geotiff-plotty.js",
+        "./lib/geotiff/leaflet-geotiff-vector-arrows.js",
     ];
     loadScripts(files, function () {
-      console.log("All scripts loaded");
-      initMap();
+        console.log("All scripts loaded");
+        initMap();
     });
-  });
-  const loadScripts = (files, callback) => {
+});
+const loadScripts = (files, callback) => {
     if (files.length === 0) {
-      callback();
-      return;
+        callback();
+        return;
     }
     const file = files.shift();
     const script = document.createElement("script");
     script.onload = function () {
-      loadScripts(files, callback);
+        loadScripts(files, callback);
     };
     script.src = file;
     document.head.appendChild(script);
-  };
-  const initMap = () => {
+};
+const initMap = () => {
     for (let i = 0; i < clipMask.length; i++) {
-      const tmp = clipMask[i][0];
-      clipMask[i][0] = clipMask[i][1];
-      clipMask[i][1] = tmp;
+        const tmp = clipMask[i][0];
+        clipMask[i][0] = clipMask[i][1];
+        clipMask[i][1] = tmp;
     }
     // 创建地图对象
     map = L.map("map", {
-      attributionControl: false,
-      // }).setView([-33, 147], 6);
+        attributionControl: false,
+        // }).setView([-33, 147], 6);
     }).setView([32.336, 118.22513], 16);
-    new L.basemapsSwitcher([
-    {
-      layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map), //DEFAULT MAP
-      icon: './img/arcgisImage.png',
-      name: 'Map one'
-    },
-    {
-      layer: L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png',{
-        attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-      }),
-      icon: './img/arcgisImage.png',
-      name: 'Map two'
-    },
-    {
-      layer: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-        attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-      }),
-      icon: './img/arcgisImage.png',
-      name: 'Map three'
-    },
-  ], { position: 'topright' }).addTo(map);
+    var layer = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+        layers: 'yy:gd',
+        format: 'image/png',
+        transparent: true,
+        version: '1.1.1'
+    }).addTo(map);
+    // new L.basemapsSwitcher([
+    //     {
+    //         layer: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    //         }).addTo(map), //DEFAULT MAP
+    //         icon: './img/arcgisImage.png',
+    //         name: 'Map one'
+    //     },
+    //     {
+    //         layer: L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+    //             attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+    //         }),
+    //         icon: './img/arcgisImage.png',
+    //         name: 'Map two'
+    //     },
+    //     {
+    //         layer: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    //             attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+    //         }),
+    //         icon: './img/arcgisImage.png',
+    //         name: 'Map three'
+    //     },
+    // ], { position: 'topright' }).addTo(map);
     //创建底图切换数据源
     // const baseLayer2 = L.tileLayer(config.baseMaps[1].Url); //ArcGIS影像图
     // map.addLayer(baseLayer2); //地图默认加载的底图
+    
     const renderer = L.LeafletGeotiff.plotty({
-      displayMin: -0.2,
-      displayMax: 0.8,
-      clampLow: false,
-      clampHigh: true,
-      colorScale: "rainbow",
-      arrowSize: 20,
-      opacity: 0.8
+        displayMin: -0.2,
+        displayMax: 0.8,
+        clampLow: false,
+        clampHigh: true,
+        colorScale: "rainbow",
+        arrowSize: 20,
+        opacity: 0.8
     });
-  
+
     // windSpeed = L.leafletGeotiff("./lib/geotiff/ndvi2_Clip.tif", {
     windSpeed = L.leafletGeotiff("http://localhost/tiff/ndvi1.tif", {
-      band: 0,
-      renderer: renderer,
-      opacity: 0.8
+        band: 0,
+        renderer: renderer,
+        opacity: 0.8
     }).addTo(map);
     document
-      .getElementById("colorScaleImage")
-      .setAttribute("src", windSpeed.colorScaleData);
-  
+        .getElementById("colorScaleImage")
+        .setAttribute("src", windSpeed.colorScaleData);
+
     map.on("click", function (e) {
-      if (!marker) {
-        marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
-      } else {
-        marker.setLatLng([e.latlng.lat, e.latlng.lng]);
-      }
-      document.getElementById("windSpeedValue").innerHTML =
-        windSpeed.getValueAtLatLng(e.latlng.lat, e.latlng.lng)
-          ? windSpeed.getValueAtLatLng(e.latlng.lat, e.latlng.lng).toFixed(1)
-          : "";
+        if (!marker) {
+            marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+        } else {
+            marker.setLatLng([e.latlng.lat, e.latlng.lng]);
+        }
+        document.getElementById("windSpeedValue").innerHTML =
+            windSpeed.getValueAtLatLng(e.latlng.lat, e.latlng.lng)
+                ? windSpeed.getValueAtLatLng(e.latlng.lat, e.latlng.lng).toFixed(1)
+                : "";
     });
-    
-  };
-  const toggleClip = () => {
+
+};
+const toggleClip = () => {
     const newClipMask = windSpeed.options.clip ? undefined : clipMask;
     windSpeed.setClip(newClipMask);
-  };
-  const changeColorScale = (event) => {
+};
+const changeColorScale = (event) => {
     windSpeed.setColorScale(event.target.value);
     document
-      .getElementById("colorScaleImage")
-      .setAttribute("src", windSpeed.colorScaleData);
-  };
-  </script>
-  
-  <style scoped>
-  #map {
+        .getElementById("colorScaleImage")
+        .setAttribute("src", windSpeed.colorScaleData);
+};
+</script>
+
+<style scoped>
+#map {
     width: 100vw;
     height: 100vh;
     float: left;
-  }
-  
-  .titleContainer {
+}
+
+.titleContainer {
     position: absolute;
     top: 0;
     background: rgba(0, 0, 0, 0.45);
@@ -2253,13 +2260,12 @@
     color: #fff;
     font-size: 28px;
     margin-left: 30vw;
-  }
-  
-  .center {
+}
+
+.center {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-  }
-  </style>
-  
+}
+</style>
